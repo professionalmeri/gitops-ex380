@@ -11,17 +11,17 @@ pipeline {
     stage ('Check resource drift') {
       steps {
         sh 'oc diff -k config | tee drift-report.txt'
-        sh '!test -s drift-report.txt'
+        sh '! test -s drift-report.txt'
       }
     }
   }
   post {
     failure {
       archiveArtifacts artifacts: "*.txt"
-      buildJob: 'apply/main'
+      build Job: 'apply/main'
     }
     success {
-      sh 'oc rm -f drift-report.txt'
+      sh 'rm -f drift-report.txt'
       sh 'echo 'There is no drift in file' > no-drift.txt'
       archiveArtifacts artifacts: "*.txt"
     }
